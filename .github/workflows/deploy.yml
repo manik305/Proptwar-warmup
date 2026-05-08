@@ -130,6 +130,7 @@ jobs:
             --cpu=1
             --min-instances=0
             --max-instances=3
+            --service-account=travel-engine-sa@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
             --set-secrets=EURI_API_KEY=euri-api-key:latest
 
       - name: Show backend URL
@@ -209,6 +210,7 @@ jobs:
             --cpu=1
             --min-instances=0
             --max-instances=3
+            --service-account=travel-engine-sa@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
           env_vars: |
             VITE_BACKEND_URL=${{ needs.deploy-backend.outputs.backend_url }}
 
