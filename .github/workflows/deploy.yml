@@ -68,6 +68,12 @@ jobs:
           terraform import -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}" \
             google_service_account.cloud_run_sa projects/${{ env.PROJECT_ID }}/serviceAccounts/travel-engine-sa@${{ env.PROJECT_ID }}.iam.gserviceaccount.com || true
 
+          terraform import -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}" \
+            google_cloud_run_v2_service.backend projects/${{ env.PROJECT_ID }}/locations/${{ env.REGION }}/services/${{ env.BACKEND_SERVICE }} || true
+
+          terraform import -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}" \
+            google_cloud_run_v2_service.frontend projects/${{ env.PROJECT_ID }}/locations/${{ env.REGION }}/services/${{ env.FRONTEND_SERVICE }} || true
+
       - name: Terraform Apply
         working-directory: TravelEngine/terraform
         run: terraform apply -auto-approve -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}"
