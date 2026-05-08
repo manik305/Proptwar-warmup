@@ -16,14 +16,17 @@ env:
 
 jobs:
   # ─────────────────────────────────────────────────────────
-  # JOB 0: Setup GCP Infrastructure Automatically
+  # JOB 0: Infrastructure with Terraform
   # ─────────────────────────────────────────────────────────
-  setup-infrastructure:
-    name: 🏗️ Setup Infrastructure
+  terraform:
+    name: 🏗️ Terraform Infrastructure
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'pull_request')
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -32,27 +35,23 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Enable Required APIs
+      - name: Create TF State Bucket (if missing)
         run: |
-          gcloud services enable \
-            artifactregistry.googleapis.com \
-            run.googleapis.com \
-            secretmanager.googleapis.com \
-            --project=${{ env.PROJECT_ID }}
-
-      - name: Create Artifact Registry (if missing)
-        run: |
-          gcloud artifacts repositories create ${{ env.REPO }} \
-            --repository-format=docker \
-            --location=${{ env.REGION }} \
-            --project=${{ env.PROJECT_ID }} \
-            --description="Docker repository for SafarEngine" || true
-
-      - name: Initialize Secret Manager (if missing)
-        run: |
-          if ! gcloud secrets describe euri-api-key --project=${{ env.PROJECT_ID }} > /dev/null 2>&1; then
-            echo -n "PLEASE_UPDATE_ME_IN_GCP_CONSOLE" | gcloud secrets create euri-api-key --data-file=- --project=${{ env.PROJECT_ID }}
+          if ! gsutil ls -b gs://${{ env.PROJECT_ID }}-tfstate > /dev/null 2>&1; then
+            gsutil mb -l ${{ env.REGION }} gs://${{ env.PROJECT_ID }}-tfstate
+            gsutil versioning set on gs://${{ env.PROJECT_ID }}-tfstate
           fi
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: TravelEngine/terraform
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: TravelEngine/terraform
+        run: terraform apply -auto-approve -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}"
 
   # ─────────────────────────────────────────────────────────
   # JOB 1: Build & push backend image
@@ -60,7 +59,7 @@ jobs:
   build-backend:
     name: 🐍 Build Backend
     runs-on: ubuntu-latest
-    needs: setup-infrastructure
+    needs: terraform
     if: github.event_name == 'push' || github.event_name == 'pull_request'
 
     outputs:
