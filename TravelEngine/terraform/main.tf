@@ -176,9 +176,6 @@ resource "google_cloud_run_v2_service" "frontend" {
         cpu_idle = true
       }
 
-      env {
-        name  = "VITE_BACKEND_URL"
-        value = google_cloud_run_v2_service.backend.uri
       }
     }
   }
