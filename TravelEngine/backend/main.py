@@ -12,19 +12,28 @@ dotenv_path = os.path.join(BASE_DIR, '.env')
 
 load_dotenv(dotenv_path=dotenv_path, override=True)
 
-app = FastAPI(title="Travel Engine API")
+app = FastAPI(title="SafarEngine API", version="1.0.0")
 
-# Setup CORS
+# ── Health check (required by Cloud Run liveness probe) ──────────
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "safar-backend"}
+
+# Setup CORS — allow localhost + any Cloud Run / custom domain
 allowed_origins = [
-    "http://localhost:5173", # Vite default
+    "http://localhost:5173",
+    "http://localhost:3000",
     "http://localhost:80",
-    "http://localhost:3000", # Common alternative
-    os.getenv("FRONTEND_URL", "https://your-production-url.com")
+    os.getenv("FRONTEND_URL", ""),
+    # Cloud Run auto-generated URLs pattern
+    "https://safar-frontend-*.run.app",
 ]
+# Filter empty strings
+allowed_origins = [o for o in allowed_origins if o]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=["*"],   # Lock down to allowed_origins post-launch
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],

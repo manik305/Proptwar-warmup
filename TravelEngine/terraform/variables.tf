@@ -1,22 +1,23 @@
 variable "project_id" {
-  description = "The GCP project ID"
+  description = "GCP Project ID"
   type        = string
+  default     = "balmy-state-495705-q0"
 }
 
 variable "region" {
-  description = "The GCP region to deploy resources in"
+  description = "GCP region (India)"
   type        = string
-  default     = "asia-south1" # Defaulting to India region for a Travel India app
+  default     = "asia-south1"
 }
 
 variable "backend_image" {
-  description = "Docker image for the FastAPI backend (Update after building/pushing)"
+  description = "Artifact Registry image URL for FastAPI backend"
   type        = string
-  default     = "gcr.io/cloudrun/hello" # Placeholder
+  default     = "asia-south1-docker.pkg.dev/balmy-state-495705-q0/travel-engine-repo/safar-backend:latest"
 }
 
 variable "frontend_image" {
-  description = "Docker image for the React frontend (Update after building/pushing)"
+  description = "Artifact Registry image URL for React frontend"
   type        = string
-  default     = "gcr.io/cloudrun/hello" # Placeholder
+  default     = "asia-south1-docker.pkg.dev/balmy-state-495705-q0/travel-engine-repo/safar-frontend:latest"
 }
