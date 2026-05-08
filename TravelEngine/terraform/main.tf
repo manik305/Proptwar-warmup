@@ -70,6 +70,13 @@ resource "google_project_iam_member" "secret_accessor" {
   member  = "serviceAccount:${google_service_account.cloud_run_sa.email}"
 }
 
+# Fallback: grant access to default compute SA as well to resolve runtime issues
+resource "google_project_iam_member" "default_compute_secret_accessor" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:199044802251-compute@developer.gserviceaccount.com"
+}
+
 # ────────────────────────────────────────────────────────────
 # Backend Cloud Run Service — FastAPI
 # ────────────────────────────────────────────────────────────
