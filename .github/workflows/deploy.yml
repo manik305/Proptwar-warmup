@@ -52,6 +52,22 @@ jobs:
         working-directory: TravelEngine/terraform
         run: terraform init
 
+      - name: Import Existing Resources (if any)
+        working-directory: TravelEngine/terraform
+        continue-on-error: true
+        run: |
+          terraform import -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}" \
+            google_artifact_registry_repository.travel_repo projects/${{ env.PROJECT_ID }}/locations/${{ env.REGION }}/repositories/${{ env.REPO }} || true
+          
+          terraform import -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}" \
+            google_secret_manager_secret.euri_api_key projects/${{ env.PROJECT_ID }}/secrets/euri-api-key || true
+          
+          terraform import -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}" \
+            google_service_account.github_actions_sa projects/${{ env.PROJECT_ID }}/serviceAccounts/github-actions-sa@${{ env.PROJECT_ID }}.iam.gserviceaccount.com || true
+          
+          terraform import -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}" \
+            google_service_account.cloud_run_sa projects/${{ env.PROJECT_ID }}/serviceAccounts/travel-engine-sa@${{ env.PROJECT_ID }}.iam.gserviceaccount.com || true
+
       - name: Terraform Apply
         working-directory: TravelEngine/terraform
         run: terraform apply -auto-approve -var="project_id=${{ env.PROJECT_ID }}" -var="region=${{ env.REGION }}"
