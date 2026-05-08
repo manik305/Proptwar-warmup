@@ -35,6 +35,9 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
+      - name: Enable Cloud Resource Manager API
+        run: gcloud services enable cloudresourcemanager.googleapis.com --project ${{ env.PROJECT_ID }}
+
       - name: Create TF State Bucket (if missing)
         run: |
           if ! gsutil ls -b gs://${{ env.PROJECT_ID }}-tfstate > /dev/null 2>&1; then
