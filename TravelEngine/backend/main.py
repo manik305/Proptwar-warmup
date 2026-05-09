@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 dotenv_path = os.path.join(BASE_DIR, '.env')
 
-load_dotenv(dotenv_path=dotenv_path, override=True)
+load_dotenv(dotenv_path=dotenv_path, override=False)
 
 app = FastAPI(title="SafarEngine API", version="1.0.0")
 
@@ -129,19 +129,30 @@ from dotenv import dotenv_values
 async def chat_endpoint(request: ChatRequest):
     # 1. Check environment (for Cloud Run / Secrets)
     api_key = os.getenv("EURI_API_KEY")
+    source = "environment"
+    
     if api_key:
         api_key = api_key.strip().replace('"', '').replace("'", "")
-        print(f"Loaded API key from environment (length: {len(api_key)})")
-    
+        # Remove "Bearer " prefix if the user accidentally included it
+        if api_key.lower().startswith("bearer "):
+            api_key = api_key[7:].strip()
+        
     # 2. Fallback to .env for local development
-    if not api_key or api_key == "YOUR_EURI_API_KEY":
-        from dotenv import dotenv_values
+    if not api_key or api_key == "YOUR_EURI_API_KEY" or not api_key.strip():
+        source = ".env file"
         config = dotenv_values(dotenv_path)
         api_key = config.get("EURI_API_KEY", "").strip().replace('"', '').replace("'", "")
+        if api_key.lower().startswith("bearer "):
+            api_key = api_key[7:].strip()
         
     if not api_key or api_key == "YOUR_EURI_API_KEY" or not api_key.strip():
         print("ERROR: EURI_API_KEY is missing or invalid.")
         raise HTTPException(status_code=500, detail="EURI_API_KEY not configured. Please check Secret Manager.")
+    
+    # Diagnostics
+    key_len = len(api_key)
+    masked_key = f"{api_key[:4]}...{api_key[-4:]}" if key_len > 8 else "****"
+    print(f"DEBUG: Loaded API key from {source}. Length: {key_len}, Pattern: {masked_key}")
         
     try:
         client = OpenAI(
@@ -174,7 +185,7 @@ async def chat_endpoint(request: ChatRequest):
         if "401" in error_msg or "authentication" in error_msg.lower():
             raise HTTPException(
                 status_code=401, 
-                detail=f"API Key Authentication Failed: {error_msg}. Please ensure you pasted ONLY the raw key in Secret Manager (no quotes, no Bearer prefix)."
+                detail=f"API Key Authentication Failed: {error_msg}. Key length used: {len(api_key)}. Pattern: {api_key[:4]}...{api_key[-4:]}. Please ensure Secret Manager contains ONLY the raw key."
             )
         
         if "insufficient_quota" in error_msg:
