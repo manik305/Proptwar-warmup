@@ -127,16 +127,19 @@ from dotenv import dotenv_values
 
 @app.post("/api/chat")
 async def chat_endpoint(request: ChatRequest):
-    # Standard way to get env vars in Cloud Run (populated by Secret Manager)
+    # 1. Check environment (for Cloud Run / Secrets)
     api_key = os.getenv("EURI_API_KEY")
+    if api_key:
+        api_key = api_key.strip().replace('"', '').replace("'", "")
+        print(f"Loaded API key from environment (length: {len(api_key)})")
     
+    # 2. Fallback to .env for local development
     if not api_key or api_key == "YOUR_EURI_API_KEY":
-        # Fallback to .env for local development only
         from dotenv import dotenv_values
         config = dotenv_values(dotenv_path)
-        api_key = config.get("EURI_API_KEY")
+        api_key = config.get("EURI_API_KEY", "").strip().replace('"', '').replace("'", "")
         
-    if not api_key or api_key == "YOUR_EURI_API_KEY":
+    if not api_key or api_key == "YOUR_EURI_API_KEY" or not api_key.strip():
         print("ERROR: EURI_API_KEY is missing or invalid.")
         raise HTTPException(status_code=500, detail="EURI_API_KEY not configured. Please check Secret Manager.")
         
@@ -164,12 +167,17 @@ async def chat_endpoint(request: ChatRequest):
         
         return {"role": "assistant", "content": response.choices[0].message.content}
     except Exception as e:
-        print(f"CRITICAL ERROR in chat_endpoint: {str(e)}")
-        # If it's an OpenAI error, it might have more details
         error_msg = str(e)
+        print(f"CRITICAL ERROR in chat_endpoint: {error_msg}")
+        
+        # Specific handling for 401 format errors
+        if "401" in error_msg or "authentication" in error_msg.lower():
+            raise HTTPException(
+                status_code=401, 
+                detail=f"API Key Authentication Failed: {error_msg}. Please ensure you pasted ONLY the raw key in Secret Manager (no quotes, no Bearer prefix)."
+            )
+        
         if "insufficient_quota" in error_msg:
             error_msg = "EURI API Quota exceeded. Please check your EURI account."
-        elif "invalid_api_key" in error_msg or "401" in error_msg:
-            error_msg = "Invalid EURI API Key. Please verify the key in Secret Manager."
             
         raise HTTPException(status_code=500, detail=error_msg)
