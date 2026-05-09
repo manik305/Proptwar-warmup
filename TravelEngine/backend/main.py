@@ -57,9 +57,8 @@ Tone: Enthusiastic, helpful, practical, and culturally aware.
 2. Complete Travel Plan: When a user provides their trip details (name, origin, destination, dates, members), you must immediately generate a highly detailed and beautifully formatted travel plan.
 3. Content of the Plan:
    - Primary Locations: Show all major locations covered in that specific destination.
-   - Budget Breakdown: Provide a realistic estimated budget based on the number of adults/children.
    - Transportation: Best ways to reach the destination from their origin and how to travel locally.
-   - Accommodation & Food: Suggest standard/budget/luxury options depending on context, along with famous local food spots.
+   - Accommodation & Food: Suggest standard, boutique, or heritage options depending on context, along with famous local food spots.
    - Middle-of-the-trip Stops: Suggest 1 or 2 logical, beautiful pit stops or layovers depending on the mode of transport.
    - Practical Tips: Weather during their dates, packing tips, and local cultural etiquette.
 
@@ -78,48 +77,42 @@ def get_trips():
             "name": "Jaipur, Rajasthan",
             "short_description": "The Pink City's royal heritage.",
             "full_description": "Jaipur, the capital of India's Rajasthan state, evokes the royal family that once ruled the region and that, in 1727, founded what is now called the Old City, or 'Pink City' for its trademark building color. Explore the magnificent Amer Fort, Hawa Mahal, and the City Palace. Perfect for history buffs and culture enthusiasts.",
-            "image": "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=2940&auto=format&fit=crop",
-            "price": "₹12,000"
+            "image": "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=2940&auto=format&fit=crop"
         },
         {
             "id": 2,
             "name": "Kerala Backwaters",
             "short_description": "God's own country backwaters.",
             "full_description": "The Kerala backwaters are a network of brackish lagoons and lakes lying parallel to the Arabian Sea coast of Kerala state in southern India. Experience the serene beauty on a traditional houseboat, surrounded by lush palm trees, diverse wildlife, and peaceful village life.",
-            "image": "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=2832&auto=format&fit=crop",
-            "price": "₹18,000"
+            "image": "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=2832&auto=format&fit=crop"
         },
         {
             "id": 3,
             "name": "North East India",
             "short_description": "Misty hills, tribes & wild forests.",
             "full_description": "North East India is one of the most breathtaking and unexplored regions of the country, comprising eight sisters states — Assam, Meghalaya, Arunachal Pradesh, Nagaland, Manipur, Mizoram, Tripura, and Sikkim. From the living root bridges of Cherrapunji and the tea gardens of Assam to the monasteries of Sikkim and the tribal cultures of Nagaland, the North East is a paradise for adventure lovers, nature enthusiasts, and culture seekers alike.",
-            "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2940&auto=format&fit=crop",
-            "price": "₹20,000"
+            "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2940&auto=format&fit=crop"
         },
         {
             "id": 4,
             "name": "Goa Beaches",
             "short_description": "Sun, sand, and vibrant nightlife.",
             "full_description": "Goa is a state in western India with coastlines stretching along the Arabian Sea. Its long history as a Portuguese colony prior to 1961 is evident in its preserved 17th-century churches and the area's tropical spice plantations. Goa is also known for its beaches, ranging from popular stretches at Baga and Palolem to those in laid-back fishing villages.",
-            "image": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=2874&auto=format&fit=crop",
-            "price": "₹15,000"
+            "image": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=2874&auto=format&fit=crop"
         },
         {
             "id": 5,
             "name": "Varanasi",
             "short_description": "Spiritual capital of India.",
             "full_description": "Varanasi is a city in the northern Indian state of Uttar Pradesh dating to the 11th century B.C. Regarded as the spiritual capital of India, the city draws Hindu pilgrims who bathe in the Ganges River's sacred waters and perform funeral rites. Along the city's winding streets are some 2,000 temples, including Kashi Vishwanath.",
-            "image": "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=2952&auto=format&fit=crop",
-            "price": "₹8,000"
+            "image": "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=2952&auto=format&fit=crop"
         },
         {
             "id": 6,
             "name": "Ladakh",
             "short_description": "The Land of High Passes.",
             "full_description": "Ladakh is most famous for breathtaking landscapes, the crystal clear skies, the highest mountain passes, thrilling adventure activities, Buddhist Monasteries and festivals. Renowned as the cold desert, Ladakh offers stunning views of Pangong Lake, Nubra Valley, and Magnetic Hill.",
-            "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=2940&auto=format&fit=crop",
-            "price": "₹25,000"
+            "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=2940&auto=format&fit=crop"
         }
     ]
 

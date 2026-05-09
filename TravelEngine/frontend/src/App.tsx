@@ -28,7 +28,6 @@ function App() {
     location: '',
     adults: 1,
     children: 0,
-    budget: 'medium',   // 'low' | 'medium' | 'high'
     climate: 'any'      // 'cold' | 'tropical' | 'desert' | 'coastal' | 'any'
   });
 
@@ -92,7 +91,7 @@ function App() {
         setMessages([...newMessages, { 
           role: 'assistant', 
           content: data.content, 
-          displayContent: `Here is your detailed travel plan for ${profile.location}! I have displayed the full itinerary on the dashboard to the left.\n\nLet me know if you want to tweak the budget, add pit stops, or change any hotels!` 
+          displayContent: `Here is your detailed travel plan for ${profile.location}! I have displayed the full itinerary on the dashboard to the left.\n\nLet me know if you want to add pit stops, change any hotels, or explore more attractions!` 
         }]);
       } else {
         setMessages([...newMessages, data]);
@@ -112,19 +111,16 @@ function App() {
     setTripPlan('');
     // setIsChatOpen(true);
 
-    const budgetLabel = profile.budget === 'low' ? 'Budget/Backpacker (₹500-₹1500/day per person)' : profile.budget === 'high' ? 'Luxury (₹5000+/day per person)' : 'Mid-Range (₹1500-₹5000/day per person)';
     const climateLabel = profile.climate === 'any' ? 'no specific climate preference' : `a preference for ${profile.climate} climates`;
 
     const initialPrompt = `Hi Safar! My name is ${profile.username}. I am currently based in ${profile.address}.
 I want to plan a trip to ${profile.location} from ${profile.startDate} to ${profile.endDate}.
 We are a group of ${profile.adults} adults and ${profile.children} children.
-Budget Category: ${budgetLabel}.
 Climate Preference: ${climateLabel}.
 Please generate a complete, detailed travel plan with:
 - All primary locations and attractions to cover
-- Hotel recommendations matching my EXACT budget category (${profile.budget} budget)
+- Recommendations for unique and local stays (heritage, boutique, or scenic)
 - Day-by-day itinerary
-- Realistic budget breakdown in INR (₹) for my group size
 - Best transport options
 - Local food recommendations
 - Weather/climate tips for my travel dates
@@ -172,13 +168,13 @@ Please generate a complete, detailed travel plan with:
             {/* Mission */}
             <div className="mb-6">
               <h3 className="text-white font-bold text-lg mb-2 flex items-center gap-2"><Sparkles className="w-5 h-5 text-saffron" /> Our Mission</h3>
-              <p className="text-gray-300 leading-relaxed">At SafarEngine, we believe every Indian journey deserves to be extraordinary. Our mission is to democratize world-class travel planning — making it effortless, affordable, and deeply personal for every traveller, whether you're a solo backpacker heading to Spiti or a family of ten exploring the ghats of Varanasi.</p>
+              <p className="text-gray-300 leading-relaxed">At SafarEngine, we believe every Indian journey deserves to be extraordinary. Our mission is to democratize world-class travel planning — making it effortless and deeply personal for every traveller, whether you're a solo adventurer heading to Spiti or a family of ten exploring the ghats of Varanasi.</p>
             </div>
 
             {/* Who We Are */}
             <div className="mb-6">
               <h3 className="text-white font-bold text-lg mb-2 flex items-center gap-2"><MapPin className="w-5 h-5 text-saffron" /> Who We Are</h3>
-              <p className="text-gray-300 leading-relaxed">SafarEngine is a next-generation AI travel platform purpose-built for the Indian subcontinent. Unlike generic travel aggregators, we don't just list hotels and flights — we think like a seasoned local travel agent. Our AI agent, <strong className="text-white">Safar</strong>, powered by <span className="text-saffron font-semibold">Google Gemini Flash 3.0</span>, understands the nuances of Indian travel: monsoon seasons, regional festivals, train routes, budget dhabas, and heritage stays.</p>
+              <p className="text-gray-300 leading-relaxed">SafarEngine is a next-generation AI travel platform purpose-built for the Indian subcontinent. Unlike generic travel sites, we don't just list bookings — we think like a seasoned local travel guide. Our AI agent, <strong className="text-white">Safar</strong>, powered by <span className="text-saffron font-semibold">Google Gemini Flash 3.0</span>, understands the nuances of Indian travel: monsoon seasons, regional festivals, train routes, local dhabas, and heritage stays.</p>
             </div>
 
             {/* What We Offer */}
@@ -187,8 +183,7 @@ Please generate a complete, detailed travel plan with:
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   { icon: '🗺️', title: 'Custom Itineraries', desc: 'Day-by-day plans tailored to your travel dates and group.' },
-                  { icon: '🏨', title: 'Hotel Suggestions', desc: 'Budget to luxury picks curated for every destination.' },
-                  { icon: '💰', title: 'Smart Budgeting', desc: 'Realistic cost breakdowns for adults and children.' },
+                  { icon: '🏨', title: 'Unique Stays', desc: 'Handpicked recommendations for heritage, boutique, and local stays.' },
                   { icon: '🚂', title: 'Transport Guidance', desc: 'Trains, flights, buses — the best way to get there.' },
                   { icon: '🍛', title: 'Local Food Spots', desc: 'Famous dhabas, coastal shacks, and rooftop restaurants.' },
                   { icon: '🤖', title: 'AI Chat Agent', desc: 'Tweak your plan in real-time with our Safar agent.' },
@@ -239,7 +234,7 @@ Please generate a complete, detailed travel plan with:
             <img src={selectedTrip.image} alt={selectedTrip.name} className="w-full h-64 object-cover rounded-2xl mb-6 shadow-lg" />
             <h2 className="text-4xl font-bold text-white mb-2">{selectedTrip.name}</h2>
             <div className="flex items-center gap-4 mb-6">
-              <span className="text-saffron font-bold bg-saffron/10 border border-saffron/20 px-4 py-1.5 rounded-full text-sm">{selectedTrip.price} est. budget</span>
+              <span className="text-saffron font-bold bg-saffron/10 border border-saffron/20 px-4 py-1.5 rounded-full text-sm">Discover Local Culture & Heritage</span>
             </div>
             
             <p className="text-gray-300 leading-relaxed text-lg mb-8">{selectedTrip.full_description}</p>
@@ -269,7 +264,7 @@ Please generate a complete, detailed travel plan with:
             
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-saffron to-yellow-400 mb-2">Plan Your Journey</h2>
-              <p className="text-gray-300">Tell us about yourself and your dream destination in India, and Safar will handle the rest.</p>
+              <p className="text-gray-300">Tell us about your dream destination in India, and Safar will help you discover its true essence.</p>
             </div>
 
             <form onSubmit={handleProfileSubmit} className="space-y-6">
@@ -316,32 +311,6 @@ Please generate a complete, detailed travel plan with:
                 </div>
               </div>
 
-              {/* Budget Selector */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-gray-300 flex items-center gap-2">💰 Budget Category</label>
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    { value: 'low', icon: '🎒', label: 'Budget', sub: '₹500–₹1,500/day' },
-                    { value: 'medium', icon: '🏨', label: 'Mid-Range', sub: '₹1,500–₹5,000/day' },
-                    { value: 'high', icon: '✨', label: 'Luxury', sub: '₹5,000+/day' },
-                  ].map(opt => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => setProfile({...profile, budget: opt.value})}
-                      className={`flex flex-col items-center gap-1.5 p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                        profile.budget === opt.value
-                          ? 'border-saffron bg-saffron/10 text-white'
-                          : 'border-white/10 bg-white/5 text-gray-400 hover:border-white/30'
-                      }`}
-                    >
-                      <span className="text-2xl">{opt.icon}</span>
-                      <span className="font-semibold text-sm">{opt.label}</span>
-                      <span className="text-[10px] text-gray-400">{opt.sub}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
 
               {/* Climate Selector */}
               <div className="space-y-3">
@@ -429,7 +398,7 @@ Please generate a complete, detailed travel plan with:
                   <div className="absolute bottom-8 left-8 right-8">
                     <div className="flex justify-between items-end mb-1">
                       <h4 className="text-3xl font-bold text-white">{trip.name}</h4>
-                      <span className="text-saffron font-bold text-lg bg-black/40 px-3 py-1 rounded-full backdrop-blur-md">{trip.price}</span>
+                      <span className="text-saffron font-bold text-lg bg-black/40 px-3 py-1 rounded-full backdrop-blur-md">Explore</span>
                     </div>
                     <p className="text-gray-300 mb-4">{trip.short_description || trip.description}</p>
                     <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-saffron group-hover:text-slateBg transition-colors">
@@ -468,7 +437,7 @@ Please generate a complete, detailed travel plan with:
                   <div className="flex flex-col items-center justify-center py-20 text-center">
                     <Compass className="w-16 h-16 text-saffron animate-spin mb-6" />
                     <h3 className="text-2xl font-bold mb-2">Crafting your magical Indian journey...</h3>
-                    <p className="text-gray-400 max-w-md mx-auto">Safar is analyzing hotels, selecting the best locations, and calculating the perfect budget.</p>
+                    <p className="text-gray-400 max-w-md mx-auto">Safar is analyzing hotels, selecting the best locations, and crafting your unique experience.</p>
                   </div>
                 ) : (
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{tripPlan}</ReactMarkdown>
