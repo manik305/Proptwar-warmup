@@ -1,3 +1,4 @@
+// Safar Travel Engine - Frontend
 import { useState, useRef, useEffect } from 'react';
 import { Send, MapPin, X, Compass, User, Sparkles, Calendar, Users, Phone, ArrowLeft, Info } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
