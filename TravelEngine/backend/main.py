@@ -127,12 +127,18 @@ from dotenv import dotenv_values
 
 @app.post("/api/chat")
 async def chat_endpoint(request: ChatRequest):
-    # Read directly from the .env file to ensure we always get the latest value
-    config = dotenv_values(dotenv_path)
-    api_key = config.get("EURI_API_KEY") or os.getenv("EURI_API_KEY")
+    # Standard way to get env vars in Cloud Run (populated by Secret Manager)
+    api_key = os.getenv("EURI_API_KEY")
     
     if not api_key or api_key == "YOUR_EURI_API_KEY":
-        raise HTTPException(status_code=500, detail="EURI_API_KEY not configured or is using the default placeholder.")
+        # Fallback to .env for local development only
+        from dotenv import dotenv_values
+        config = dotenv_values(dotenv_path)
+        api_key = config.get("EURI_API_KEY")
+        
+    if not api_key or api_key == "YOUR_EURI_API_KEY":
+        print("ERROR: EURI_API_KEY is missing or invalid.")
+        raise HTTPException(status_code=500, detail="EURI_API_KEY not configured. Please check Secret Manager.")
         
     try:
         client = OpenAI(
@@ -158,4 +164,12 @@ async def chat_endpoint(request: ChatRequest):
         
         return {"role": "assistant", "content": response.choices[0].message.content}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"CRITICAL ERROR in chat_endpoint: {str(e)}")
+        # If it's an OpenAI error, it might have more details
+        error_msg = str(e)
+        if "insufficient_quota" in error_msg:
+            error_msg = "EURI API Quota exceeded. Please check your EURI account."
+        elif "invalid_api_key" in error_msg or "401" in error_msg:
+            error_msg = "Invalid EURI API Key. Please verify the key in Secret Manager."
+            
+        raise HTTPException(status_code=500, detail=error_msg)
