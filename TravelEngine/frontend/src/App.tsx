@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, MapPin, MessageSquare, X, Compass, User, Sparkles, Calendar, Users, Phone, ArrowLeft, Info } from 'lucide-react';
+import { Send, MapPin, X, Compass, User, Sparkles, Calendar, Users, Phone, ArrowLeft, Info } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -8,7 +8,7 @@ function App() {
     {role: 'assistant', content: 'Namaste! I am Safar, your travel assistant. Please fill out your trip details, and I will craft the perfect itinerary for you!'}
   ]);
   const [input, setInput] = useState('');
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  // const [isChatOpen, setIsChatOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [trips, setTrips] = useState<any[]>([]);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -34,7 +34,7 @@ function App() {
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const tripsRef = useRef<HTMLDivElement>(null);
-  const aboutRef = useRef<HTMLDivElement>(null);
+  // const aboutRef = useRef<HTMLDivElement>(null);
   const [showAbout, setShowAbout] = useState(false);
 
   const scrollToBottom = () => {
@@ -111,7 +111,7 @@ function App() {
     setShowProfileModal(false);
     setView('plan');
     setTripPlan('');
-    setIsChatOpen(true);
+    // setIsChatOpen(true);
 
     const budgetLabel = profile.budget === 'low' ? 'Budget/Backpacker (₹500-₹1500/day per person)' : profile.budget === 'high' ? 'Luxury (₹5000+/day per person)' : 'Mid-Range (₹1500-₹5000/day per person)';
     const climateLabel = profile.climate === 'any' ? 'no specific climate preference' : `a preference for ${profile.climate} climates`;
