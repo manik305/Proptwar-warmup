@@ -9,7 +9,6 @@ function App() {
     {role: 'assistant', content: 'Namaste! I am Safar, your travel assistant. Please fill out your trip details, and I will craft the perfect itinerary for you!'}
   ]);
   const [input, setInput] = useState('');
-  // const [isChatOpen, setIsChatOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [trips, setTrips] = useState<any[]>([]);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -35,7 +34,6 @@ function App() {
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const tripsRef = useRef<HTMLDivElement>(null);
-  // const aboutRef = useRef<HTMLDivElement>(null);
   const [showAbout, setShowAbout] = useState(false);
 
   const scrollToBottom = () => {
