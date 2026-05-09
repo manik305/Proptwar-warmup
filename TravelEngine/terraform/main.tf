@@ -175,8 +175,6 @@ resource "google_cloud_run_v2_service" "frontend" {
         }
         cpu_idle = true
       }
-
-      }
     }
   }
 
