@@ -13,11 +13,11 @@ variable "region" {
 variable "backend_image" {
   description = "Artifact Registry image URL for FastAPI backend"
   type        = string
-  default     = "asia-south1-docker.pkg.dev/balmy-state-495705-q0/travel-engine-repo/safar-backend:latest"
+  default     = "us-docker.pkg.dev/cloudrun/container/hello"
 }
 
 variable "frontend_image" {
   description = "Artifact Registry image URL for React frontend"
   type        = string
-  default     = "asia-south1-docker.pkg.dev/balmy-state-495705-q0/travel-engine-repo/safar-frontend:latest"
+  default     = "us-docker.pkg.dev/cloudrun/container/hello"
 }
