@@ -1,6 +1,6 @@
 // Safar Travel Engine - Frontend
 import { useState, useRef, useEffect } from 'react';
-import { Send, MapPin, X, Compass, User, Sparkles, Calendar, Users, Phone, ArrowLeft, Info } from 'lucide-react';
+import { Send, MapPin, X, Compass, User, Sparkles, Calendar, Users, Phone, ArrowLeft, Info, Menu, MessageCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -34,6 +34,8 @@ function App() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const tripsRef = useRef<HTMLDivElement>(null);
   const [showAbout, setShowAbout] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activePlanTab, setActivePlanTab] = useState<'itinerary' | 'chat'>('itinerary');
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -132,17 +134,63 @@ Please generate a complete, detailed travel plan with:
   return (
     <div className="min-h-screen bg-slateBg text-white font-sans overflow-x-hidden selection:bg-saffron selection:text-white">
       {/* Navbar */}
-      <nav className="fixed top-0 w-full px-8 py-5 z-20 flex justify-between items-center backdrop-blur-md bg-black/40 border-b border-white/5">
-        <button onClick={() => setView('home')} className="flex items-center gap-2 text-2xl font-bold text-saffron tracking-wider">
-          <Compass className="w-8 h-8" />
+      <nav className="fixed top-0 w-full px-4 md:px-8 py-4 md:py-5 z-[100] flex justify-between items-center backdrop-blur-md bg-black/60 border-b border-white/5">
+        <button onClick={() => { setView('home'); setMobileMenuOpen(false); }} className="flex items-center gap-2 text-xl md:text-2xl font-bold text-saffron tracking-wider">
+          <Compass className="w-6 h-6 md:w-8 md:h-8" />
           <span>SafarEngine</span>
         </button>
+        
+        {/* Desktop Menu */}
         <div className="hidden md:flex gap-8 font-medium text-sm items-center">
           <button onClick={() => { if(view!=='home') setView('home'); setTimeout(() => tripsRef.current?.scrollIntoView({behavior:'smooth'}), 100); }} className="hover:text-saffron transition-colors">Destinations</button>
           <button onClick={() => { if(view!=='home') setView('home'); setTimeout(() => tripsRef.current?.scrollIntoView({behavior:'smooth'}), 100); }} className="hover:text-saffron transition-colors">Trips</button>
           <button onClick={() => setShowAbout(true)} className="hover:text-saffron transition-colors flex items-center gap-1"><Info className="w-4 h-4" />About</button>
-          <button onClick={() => setShowProfileModal(true)} className="bg-saffron text-slateBg px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-all">Plan a Trip</button>
+          {profile.username ? (
+            <div className="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-full border border-white/10">
+              <div className="w-7 h-7 rounded-full bg-saffron text-slateBg flex items-center justify-center font-bold text-xs">
+                {profile.username.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm font-medium">{profile.username.split(' ')[0]}</span>
+            </div>
+          ) : (
+            <button onClick={() => setShowProfileModal(true)} className="bg-saffron text-slateBg px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-all">Plan a Trip</button>
+          )}
         </div>
+
+        {/* Mobile Menu Button / Profile */}
+        <div className="flex md:hidden items-center gap-3">
+          {profile.username && (
+            <div className="w-8 h-8 rounded-full bg-saffron text-slateBg flex items-center justify-center font-bold text-sm">
+              {profile.username.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white p-2">
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        {mobileMenuOpen && (
+          <div className="absolute top-full left-0 w-full bg-[#0f172a]/98 backdrop-blur-2xl border-b border-white/10 p-6 flex flex-col gap-4 md:hidden animate-in slide-in-from-top duration-300">
+            {profile.username && (
+              <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10 mb-2">
+                <div className="w-12 h-12 rounded-full bg-saffron text-slateBg flex items-center justify-center font-bold text-xl">
+                  {profile.username.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="font-bold text-white">{profile.username}</p>
+                  <p className="text-xs text-gray-400">{profile.address}</p>
+                </div>
+              </div>
+            )}
+            <button onClick={() => { setView('home'); setMobileMenuOpen(false); setTimeout(() => tripsRef.current?.scrollIntoView({behavior:'smooth'}), 100); }} className="text-lg font-medium text-left py-3 border-b border-white/5">Destinations</button>
+            <button onClick={() => { setView('home'); setMobileMenuOpen(false); setTimeout(() => tripsRef.current?.scrollIntoView({behavior:'smooth'}), 100); }} className="text-lg font-medium text-left py-3 border-b border-white/5">Trips</button>
+            <button onClick={() => { setShowAbout(true); setMobileMenuOpen(false); }} className="text-lg font-medium text-left py-3 border-b border-white/5 flex items-center gap-2"><Info className="w-5 h-5 text-saffron" />About Safar</button>
+            {!profile.username && (
+              <button onClick={() => { setShowProfileModal(true); setMobileMenuOpen(false); }} className="bg-saffron text-slateBg px-5 py-4 rounded-xl font-bold text-center mt-2 shadow-lg">Start Planning</button>
+            )}
+          </div>
+        )}
       </nav>
 
       {/* About Modal */}
@@ -257,8 +305,8 @@ Please generate a complete, detailed travel plan with:
       {showProfileModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowProfileModal(false)} />
-          <div className="relative glass-panel w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-8 border border-white/10 shadow-2xl animate-in fade-in zoom-in duration-300">
-            <button onClick={() => setShowProfileModal(false)} className="absolute right-6 top-6 text-gray-400 hover:text-white transition-colors">
+          <div className="relative glass-panel w-full max-w-2xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/10 shadow-2xl animate-in fade-in zoom-in duration-300">
+            <button onClick={() => setShowProfileModal(false)} className="absolute right-4 top-4 md:right-6 md:top-6 text-gray-400 hover:text-white transition-colors z-10">
               <X className="w-6 h-6" />
             </button>
             
@@ -300,13 +348,13 @@ Please generate a complete, detailed travel plan with:
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="space-y-2 col-span-2">
-                  <label className="text-sm font-medium text-gray-300 flex items-center gap-2"><Users className="w-4 h-4 text-saffron"/> Adults</label>
+              <div className="grid grid-cols-2 gap-4 md:gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs md:text-sm font-medium text-gray-300 flex items-center gap-2"><Users className="w-4 h-4 text-saffron"/> Adults</label>
                   <input required type="number" min="1" value={profile.adults} onChange={e => setProfile({...profile, adults: parseInt(e.target.value) || 1})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-saffron/50 focus:outline-none focus:bg-white/10 transition-colors" />
                 </div>
-                <div className="space-y-2 col-span-2">
-                  <label className="text-sm font-medium text-gray-300 flex items-center gap-2"><Users className="w-4 h-4 text-saffron"/> Children</label>
+                <div className="space-y-2">
+                  <label className="text-xs md:text-sm font-medium text-gray-300 flex items-center gap-2"><Users className="w-4 h-4 text-saffron"/> Children</label>
                   <input required type="number" min="0" value={profile.children} onChange={e => setProfile({...profile, children: parseInt(e.target.value) || 0})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-saffron/50 focus:outline-none focus:bg-white/10 transition-colors" />
                 </div>
               </div>
@@ -352,9 +400,9 @@ Please generate a complete, detailed travel plan with:
       {view === 'home' ? (
         <>
           {/* Hero Section */}
-          <div className="relative h-[80vh] flex items-center px-8 md:px-20 pt-20">
+          <div className="relative h-[85vh] md:h-[80vh] flex items-center px-6 md:px-20 pt-20">
             <div className="absolute inset-0 z-0">
-              <div className="absolute inset-0 bg-gradient-to-r from-slateBg via-slateBg/70 to-transparent z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-slateBg via-slateBg/80 to-transparent z-10" />
               <div className="absolute inset-0 bg-gradient-to-t from-slateBg via-transparent to-transparent z-10" />
               <img 
                 src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=2000&q=80" 
@@ -363,18 +411,18 @@ Please generate a complete, detailed travel plan with:
               />
             </div>
             <div className="relative z-10 max-w-2xl mt-12">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-saffron text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-saffron text-xs md:text-sm font-medium mb-6">
                 <Sparkles className="w-4 h-4" /> AI-Powered Travel Planning
               </div>
-              <h2 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
+              <h2 className="text-4xl md:text-7xl font-bold leading-tight mb-6">
                 Discover the <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-saffron to-yellow-400">Soul of India</span>
               </h2>
-              <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-lg leading-relaxed">
+              <p className="text-base md:text-xl text-gray-300 mb-10 max-w-lg leading-relaxed">
                 Plan your perfect journey from the majestic Himalayas to the serene backwaters of Kerala with our intelligent travel assistant.
               </p>
               <button 
                 onClick={() => setShowProfileModal(true)}
-                className="bg-gradient-to-r from-saffron to-orange-500 text-slateBg px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,153,51,0.4)] flex items-center gap-2"
+                className="w-full md:w-auto bg-gradient-to-r from-saffron to-orange-500 text-slateBg px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,153,51,0.4)] flex items-center justify-center gap-2"
               >
                 <MapPin className="w-5 h-5" /> Start Exploring
               </button>
@@ -382,15 +430,15 @@ Please generate a complete, detailed travel plan with:
           </div>
 
           {/* Destinations Grid */}
-          <div ref={tripsRef} className="px-8 md:px-20 py-24 relative z-10">
+          <div ref={tripsRef} className="px-6 md:px-20 py-16 md:py-24 relative z-10">
             <div className="flex justify-between items-end mb-12">
               <div>
-                <h3 className="text-4xl font-bold">Top Destinations</h3>
+                <h3 className="text-3xl md:text-4xl font-bold">Top Destinations</h3>
                 <p className="text-gray-400 mt-2">Curated experiences for your next adventure</p>
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
               {trips.length > 0 ? trips.map((trip, idx) => (
                 <div key={idx} onClick={() => setSelectedTrip(trip)} className="group cursor-pointer rounded-3xl overflow-hidden h-[400px] relative shadow-2xl">
                   <img src={trip.image} alt={trip.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
@@ -413,31 +461,48 @@ Please generate a complete, detailed travel plan with:
           </div>
         </>
       ) : (
-        /* Plan Dashboard — true split screen */
-        <div className="flex h-screen pt-[72px] overflow-hidden">
-          {/* LEFT: Itinerary */}
-          <div className="flex-1 overflow-y-auto px-8 md:px-12 py-10 relative">
-            <button onClick={() => setView('home')} className="flex items-center gap-2 text-saffron hover:text-white transition-colors mb-8 font-medium">
-              <ArrowLeft className="w-5 h-5" /> Back to Home
+        /* Plan Dashboard — responsive split screen */
+        <div className="flex flex-col md:flex-row h-screen pt-[64px] md:pt-[72px] overflow-hidden">
+          
+          {/* Mobile Tab Switcher */}
+          <div className="flex md:hidden bg-slateBg border-b border-white/10 p-2 shrink-0">
+            <button 
+              onClick={() => setActivePlanTab('itinerary')}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all ${activePlanTab === 'itinerary' ? 'bg-saffron text-slateBg' : 'text-gray-400'}`}
+            >
+              <Calendar className="w-4 h-4" /> Itinerary
             </button>
-            <div className="glass-panel rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+            <button 
+              onClick={() => setActivePlanTab('chat')}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all ${activePlanTab === 'chat' ? 'bg-saffron text-slateBg' : 'text-gray-400'}`}
+            >
+              <MessageCircle className="w-4 h-4" /> Chat with Safar
+            </button>
+          </div>
+
+          {/* LEFT: Itinerary */}
+          <div className={`flex-1 overflow-y-auto px-4 md:px-12 py-6 md:py-10 relative ${activePlanTab === 'chat' ? 'hidden md:block' : 'block'}`}>
+            <button onClick={() => setView('home')} className="flex items-center gap-2 text-saffron hover:text-white transition-colors mb-6 md:mb-8 font-medium text-sm md:text-base">
+              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" /> Back to Home
+            </button>
+            <div className="glass-panel rounded-2xl md:rounded-3xl p-6 md:p-12 shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-saffron/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-              <div className="flex flex-wrap items-center justify-between mb-8 pb-8 border-b border-white/10 gap-4">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 md:mb-8 pb-6 md:pb-8 border-b border-white/10 gap-4">
                 <div>
-                  <h2 className="text-3xl font-bold mb-1">Your Safar to <span className="text-transparent bg-clip-text bg-gradient-to-r from-saffron to-yellow-400">{profile.location}</span></h2>
-                  <p className="text-gray-400">Curated for {profile.username}</p>
+                  <h2 className="text-2xl md:text-3xl font-bold mb-1">Your Safar to <span className="text-transparent bg-clip-text bg-gradient-to-r from-saffron to-yellow-400">{profile.location}</span></h2>
+                  <p className="text-gray-400 text-sm">Curated for {profile.username}</p>
                 </div>
-                <div className="flex flex-col gap-1 bg-black/20 px-4 py-3 rounded-2xl text-sm text-gray-300">
+                <div className="flex flex-col gap-1 bg-black/20 px-4 py-3 rounded-2xl text-xs md:text-sm text-gray-300 w-full md:w-auto">
                   <span className="flex items-center gap-2"><Calendar className="w-4 h-4 text-saffron"/>{profile.startDate} → {profile.endDate}</span>
                   <span className="flex items-center gap-2"><Users className="w-4 h-4 text-saffron"/>{profile.adults} Adults, {profile.children} Children</span>
                 </div>
               </div>
-              <div className="markdown-body prose prose-invert prose-orange max-w-none">
+              <div className="markdown-body prose prose-invert prose-orange max-w-none text-sm md:text-base">
                 {isLoading && !tripPlan ? (
-                  <div className="flex flex-col items-center justify-center py-20 text-center">
-                    <Compass className="w-16 h-16 text-saffron animate-spin mb-6" />
-                    <h3 className="text-2xl font-bold mb-2">Crafting your magical Indian journey...</h3>
-                    <p className="text-gray-400 max-w-md mx-auto">Safar is analyzing hotels, selecting the best locations, and crafting your unique experience.</p>
+                  <div className="flex flex-col items-center justify-center py-12 md:py-20 text-center">
+                    <Compass className="w-12 h-12 md:w-16 md:h-16 text-saffron animate-spin mb-6" />
+                    <h3 className="text-xl md:text-2xl font-bold mb-2">Crafting your magical Indian journey...</h3>
+                    <p className="text-gray-400 max-w-md mx-auto text-sm md:text-base">Safar is analyzing hotels, selecting the best locations, and crafting your unique experience.</p>
                   </div>
                 ) : (
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{tripPlan}</ReactMarkdown>
@@ -447,7 +512,7 @@ Please generate a complete, detailed travel plan with:
           </div>
 
           {/* RIGHT: Embedded Chat */}
-          <div className="w-[380px] shrink-0 border-l border-white/10 flex flex-col bg-[#0d1117]">
+          <div className={`w-full md:w-[380px] shrink-0 border-l border-white/10 flex flex-col bg-[#0d1117] ${activePlanTab === 'itinerary' ? 'hidden md:flex' : 'flex'}`}>
             <div className="bg-gradient-to-r from-saffron to-orange-500 p-4 flex items-center gap-3 shrink-0">
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-saffron">
                 <Compass className="w-6 h-6" />
@@ -463,7 +528,7 @@ Please generate a complete, detailed travel plan with:
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role==='user' ? 'bg-slate-700' : 'bg-saffron text-slateBg'}`}>
                     {msg.role==='user' ? <User className="w-4 h-4 text-white"/> : <Compass className="w-4 h-4"/>}
                   </div>
-                  <div className={`max-w-[80%] p-3 text-sm leading-relaxed rounded-2xl ${msg.role==='user' ? 'bg-saffron text-slateBg rounded-tr-sm font-medium' : 'bg-white/10 text-gray-100 rounded-tl-sm border border-white/5'}`}>
+                  <div className={`max-w-[85%] md:max-w-[80%] p-3 text-sm leading-relaxed rounded-2xl ${msg.role==='user' ? 'bg-saffron text-slateBg rounded-tr-sm font-medium' : 'bg-white/10 text-gray-100 rounded-tl-sm border border-white/5'}`}>
                     <div dangerouslySetInnerHTML={{__html:(msg.displayContent||msg.content).replace(/\*\*(.*?)\*\*/g,'<strong class="text-saffron font-bold">$1</strong>').replace(/\n/g,'<br/>')}} />
                   </div>
                 </div>
@@ -480,7 +545,7 @@ Please generate a complete, detailed travel plan with:
               )}
               <div ref={chatEndRef} />
             </div>
-            <div className="p-4 border-t border-white/10 bg-[#0d1117] shrink-0">
+            <div className="p-4 pb-8 md:pb-4 border-t border-white/10 bg-[#0d1117] shrink-0">
               <div className="relative">
                 <input type="text" value={input} onChange={e=>setInput(e.target.value)} onKeyPress={e=>e.key==='Enter'&&sendMessage()} placeholder="Ask Safar to tweak your plan..." className="w-full bg-white/5 border border-white/10 rounded-full pl-4 pr-11 py-3 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-saffron/50 transition-all" />
                 <button onClick={()=>sendMessage()} disabled={isLoading||!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 bg-saffron text-slateBg w-8 h-8 rounded-full flex items-center justify-center hover:bg-orange-400 transition-colors disabled:opacity-50">

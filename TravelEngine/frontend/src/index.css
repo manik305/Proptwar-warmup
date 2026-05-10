@@ -9,6 +9,31 @@
   .glass-panel {
     @apply bg-white/5 backdrop-blur-lg border border-white/10;
   }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom Scrollbar for Desktop */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 153, 51, 0.2);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 153, 51, 0.4);
+  }
 }
 
 /* Markdown Styles */
@@ -22,9 +47,16 @@
   margin-top: 1.5em;
   margin-bottom: 0.5em;
 }
-.markdown-body h1 { font-size: 2.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
-.markdown-body h2 { font-size: 1.75rem; }
-.markdown-body h3 { font-size: 1.25rem; }
+.markdown-body h1 { font-size: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+.markdown-body h2 { font-size: 1.5rem; }
+.markdown-body h3 { font-size: 1.125rem; }
+
+@media (min-width: 768px) {
+  .markdown-body h1 { font-size: 2.25rem; }
+  .markdown-body h2 { font-size: 1.75rem; }
+  .markdown-body h3 { font-size: 1.25rem; }
+}
+
 .markdown-body ul, .markdown-body ol {
   padding-left: 1.5rem;
   margin-bottom: 1rem;
@@ -50,10 +82,22 @@
 }
 
 body {
-  @apply bg-slateBg text-white antialiased;
+  @apply bg-slateBg text-white antialiased overflow-x-hidden;
   font-family: 'Inter', sans-serif;
+  /* Prevent zoom on mobile input */
+  touch-action: manipulation;
 }
 
 .glass-panel {
   @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg;
+}
+
+/* Animations */
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out forwards;
 }
