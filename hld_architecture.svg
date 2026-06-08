@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070a13" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Layer 1 Gradient: Presentation (Saffron/Sunset) -->
+    <linearGradient id="layer1Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+
+    <!-- Layer 2 Gradient: API/Routing (Teal/Cyan) -->
+    <linearGradient id="layer2Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0d9488" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+
+    <!-- Layer 3 Gradient: Integration/AI Orchestration (Blue/Indigo) -->
+    <linearGradient id="layer3Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+
+    <!-- Layer 4 Gradient: External Services (Purple/Pink) -->
+    <linearGradient id="layer4Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#db2777" />
+    </linearGradient>
+
+    <!-- Glassmorphic Glow and Shadows -->
+    <filter id="glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+
+    <filter id="subtleShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bgGrad)" />
+  
+  <!-- Flow Lines (Background Guide) -->
+  <path d="M 450 135 L 450 515" stroke="#1e293b" stroke-width="4" stroke-dasharray="8 8" />
+  
+  <!-- Title -->
+  <text x="450" y="45" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="24" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="1">
+    SAFAR ENGINE — LAYERED ARCHITECTURE
+  </text>
+  <text x="450" y="70" font-family="'Inter', sans-serif" font-size="14" font-weight="400" fill="#94a3b8" text-anchor="middle">
+    High-Level Design (HLD) Vector Overview
+  </text>
+
+  <!-- ==================== LAYER 1: PRESENTATION ==================== -->
+  <g filter="url(#glow)">
+    <rect x="80" y="100" width="740" height="90" rx="16" fill="url(#layer1Grad)" opacity="0.95" />
+    <!-- Inner Border for Glass Effect -->
+    <rect x="81" y="101" width="738" height="88" rx="15" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.25" />
+    
+    <text x="110" y="140" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="700" fill="#ffffff">LAYER 1: PRESENTATION LAYER</text>
+    <text x="110" y="165" font-family="'Inter', sans-serif" font-size="13" font-weight="400" fill="#ffedd5">React SPA • TypeScript • Tailwind CSS • Glassmorphism UI</text>
+    
+    <!-- Component Badges -->
+    <rect x="520" y="125" width="120" height="40" rx="8" fill="#7c2d12" opacity="0.6" />
+    <text x="580" y="150" font-family="'Inter', sans-serif" font-size="12" font-weight="600" fill="#ffedd5" text-anchor="middle">Safar Chatbot</text>
+
+    <rect x="655" y="125" width="145" height="40" rx="8" fill="#7c2d12" opacity="0.6" />
+    <text x="727" y="150" font-family="'Inter', sans-serif" font-size="12" font-weight="600" fill="#ffedd5" text-anchor="middle">Itinerary Showcase</text>
+  </g>
+
+  <!-- Flow Arrow 1-2 -->
+  <g>
+    <line x1="450" y1="190" x2="450" y2="222" stroke="#f59e0b" stroke-width="3" marker-end="url(#arrow)" />
+    <polygon points="450,227 445,217 455,217" fill="#f59e0b" />
+    <text x="465" y="213" font-family="'Inter', sans-serif" font-size="11" font-weight="600" fill="#f59e0b">/api/chat &amp; /api/trips</text>
+  </g>
+
+  <!-- ==================== LAYER 2: API & ROUTING ==================== -->
+  <g filter="url(#glow)">
+    <rect x="80" y="230" width="740" height="90" rx="16" fill="url(#layer2Grad)" opacity="0.95" />
+    <rect x="81" y="231" width="738" height="88" rx="15" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.25" />
+    
+    <text x="110" y="270" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="700" fill="#ffffff">LAYER 2: API &amp; ROUTING LAYER</text>
+    <text x="110" y="295" font-family="'Inter', sans-serif" font-size="13" font-weight="400" fill="#ccfbf1">FastAPI • CORS Middleware • Uvicorn Server</text>
+    
+    <!-- Component Badges -->
+    <rect x="520" y="255" width="120" height="40" rx="8" fill="#115e59" opacity="0.6" />
+    <text x="580" y="280" font-family="'Inter', sans-serif" font-size="12" font-weight="600" fill="#ccfbf1" text-anchor="middle">Endpoints Handler</text>
+
+    <rect x="655" y="255" width="145" height="40" rx="8" fill="#115e59" opacity="0.6" />
+    <text x="727" y="280" font-family="'Inter', sans-serif" font-size="12" font-weight="600" fill="#ccfbf1" text-anchor="middle">Request Validation</text>
+  </g>
+
+  <!-- Flow Arrow 2-3 -->
+  <g>
+    <polygon points="450,357 445,347 455,347" fill="#06b6d4" />
+    <text x="465" y="343" font-family="'Inter', sans-serif" font-size="11" font-weight="600" fill="#06b6d4">Orchestrate Prompt</text>
+  </g>
+
+  <!-- ==================== LAYER 3: ORCHESTRATION & SECRETS ==================== -->
+  <g filter="url(#glow)">
+    <rect x="80" y="360" width="740" height="90" rx="16" fill="url(#layer3Grad)" opacity="0.95" />
+    <rect x="81" y="361" width="738" height="88" rx="15" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.25" />
+    
+    <text x="110" y="400" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="700" fill="#ffffff">LAYER 3: AI ORCHESTRATION &amp; SECRETS</text>
+    <text x="110" y="425" font-family="'Inter', sans-serif" font-size="13" font-weight="400" fill="#dbeafe">System Prompts • Chat History Assembly • Key Validation</text>
+    
+    <!-- Component Badges -->
+    <rect x="520" y="385" width="120" height="40" rx="8" fill="#1e40af" opacity="0.6" />
+    <text x="580" y="410" font-family="'Inter', sans-serif" font-size="12" font-weight="600" fill="#dbeafe" text-anchor="middle">System Directives</text>
+
+    <rect x="655" y="385" width="145" height="40" rx="8" fill="#1e40af" opacity="0.6" />
+    <text x="727" y="410" font-family="'Inter', sans-serif" font-size="12" font-weight="600" fill="#dbeafe" text-anchor="middle">GCP Secret Manager</text>
+  </g>
+
+  <!-- Flow Arrow 3-4 -->
+  <g>
+    <polygon points="450,487 445,477 455,477" fill="#4f46e5" />
+    <text x="465" y="473" font-family="'Inter', sans-serif" font-size="11" font-weight="600" fill="#4f46e5">Secure REST Request</text>
+  </g>
+
+  <!-- ==================== LAYER 4: EXTERNAL INTEGRATIONS ==================== -->
+  <g filter="url(#glow)">
+    <rect x="80" y="490" width="740" height="90" rx="16" fill="url(#layer4Grad)" opacity="0.95" />
+    <rect x="81" y="491" width="738" height="88" rx="15" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.25" />
+    
+    <text x="110" y="530" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="700" fill="#ffffff">LAYER 4: EXTERNAL INTEGRATIONS &amp; SERVICES</text>
+    <text x="110" y="555" font-family="'Inter', sans-serif" font-size="13" font-weight="400" fill="#fce7f3">Euron OpenAI Endpoint • Gemini LLM Models • Unsplash API</text>
+    
+    <!-- Component Badges -->
+    <rect x="520" y="515" width="120" height="40" rx="8" fill="#701a75" opacity="0.6" />
+    <text x="580" y="540" font-family="'Inter', sans-serif" font-size="12" font-weight="600" fill="#fce7f3" text-anchor="middle">gemini-3.0-flash</text>
+
+    <rect x="655" y="515" width="145" height="40" rx="8" fill="#701a75" opacity="0.6" />
+    <text x="727" y="540" font-family="'Inter', sans-serif" font-size="12" font-weight="600" fill="#fce7f3" text-anchor="middle">Unsplash Images</text>
+  </g>
+
+  <!-- Footer Info -->
+  <text x="450" y="620" font-family="'Inter', sans-serif" font-size="11" fill="#475569" text-anchor="middle">
+    Safar Travel Planner • Vector Graphic Design System
+  </text>
+</svg>
